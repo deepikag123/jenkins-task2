@@ -26,27 +26,27 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Starting Flask app...'
-
-                // Kill any old Flask/python process (ignore error if none)
+                // Kill old python/pythonw processes, ignore errors
                 bat '''
-                taskkill /F /IM python.exe || echo No process to kill
+                taskkill /F /IM python.exe   || echo No python.exe to kill
+                taskkill /F /IM pythonw.exe  || echo No pythonw.exe to kill
                 '''
 
-                // Start Flask in background using pythonw
-                bat '''
-                start /B pythonw app.py > flask.log 2>&1
-                exit 0
-                '''
+                // Start Flask app with pythonw (background, no blocking)
+                bat 'start "" pythonw app.py'
+
+                echo '✅ Flask app started. Access it at http://localhost:5000'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build and Deploy Successful! Visit http://127.0.0.1:5000'
+            echo '✅ Build and Deploy Successful!'
         }
         failure {
             echo '❌ Build Failed. Check flask.log in workspace'
         }
     }
 }
+
