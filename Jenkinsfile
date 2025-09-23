@@ -4,48 +4,48 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Building the application...'
+                echo "Building the application..."
                 bat 'echo Build step running on Windows'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
+                echo "Installing dependencies..."
                 bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                echo "Running tests..."
                 bat 'echo All tests passed!'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo 'Starting Flask app...'
-                // Kill old python/pythonw processes, ignore errors
+                echo "Starting Flask app..."
+
+                // Kill any running Flask (pythonw) process
                 bat '''
-                taskkill /F /IM python.exe   || echo No python.exe to kill
-                taskkill /F /IM pythonw.exe  || echo No pythonw.exe to kill
+                taskkill /F /IM pythonw.exe || echo No process to kill
                 '''
 
-                // Start Flask app with pythonw (background, no blocking)
-                bat 'start "" pythonw app.py'
-
-                echo '✅ Flask app started. Access it at http://localhost:5000'
+                // Start Flask app in background with pythonw
+                bat '''
+                start "" pythonw app.py > flask.log 2>&1
+                '''
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build and Deploy Successful!'
+            echo "✅ Build and Deploy Successful! Visit http://127.0.0.1:5000"
         }
         failure {
-            echo '❌ Build Failed. Check flask.log in workspace'
+            echo "❌ Build Failed. Check flask.log in workspace"
         }
     }
 }
