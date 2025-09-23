@@ -22,8 +22,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Starting Flask app...'
-                // Run Flask app in background on Windows
-                bat 'start /B python app.py'
+        bat '''
+        taskkill /F /IM python.exe || echo No process to kill
+        start cmd /c "python app.py"
+        '''
             }
         }
     }
