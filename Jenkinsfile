@@ -29,11 +29,14 @@ pipeline {
             steps {
                 echo 'Starting Flask app...'
 
-                // Kill any previous Flask process
-                bat 'taskkill /F /IM python.exe || echo No process to kill'
+        // Kill old python processes (ignore if none)
+        bat 'taskkill /F /IM python.exe || echo No process to kill'
 
-                // Start Flask in background with pythonw.exe (no blocking, no console window)
-                bat 'start /B pythonw app.py > flask.log 2>&1'
+        // Start Flask app in background with pythonw (no blocking)
+        bat 'start /B pythonw app.py > flask.log 2>&1'
+
+        // Mark build as success
+        echo '✅ Flask app started. Check http://127.0.0.1:5000'
             }
         }
     }
