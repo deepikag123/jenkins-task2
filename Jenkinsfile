@@ -1,5 +1,3 @@
-
-
 pipeline {
     agent any
 
@@ -29,21 +27,23 @@ pipeline {
             steps {
                 echo 'Starting Flask app...'
 
-        // Kill old python processes (ignore if none)
-        bat 'taskkill /F /IM python.exe || echo No process to kill'
+                // Kill any old Flask/python process (ignore error if none)
+                bat '''
+                taskkill /F /IM python.exe || echo No process to kill
+                '''
 
-        // Start Flask app in background with pythonw (no blocking)
-        bat 'start /B pythonw app.py > flask.log 2>&1'
-
-        // Mark build as success
-        echo '✅ Flask app started. Check http://127.0.0.1:5000'
+                // Start Flask in background using pythonw
+                bat '''
+                start /B pythonw app.py > flask.log 2>&1
+                exit 0
+                '''
             }
         }
     }
 
     post {
         success {
-            echo '✅ Build and Deploy Successful! Visit http://127.0.0.1:5000 or your LAN IP'
+            echo '✅ Build and Deploy Successful! Visit http://127.0.0.1:5000'
         }
         failure {
             echo '❌ Build Failed. Check flask.log in workspace'
