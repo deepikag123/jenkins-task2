@@ -22,7 +22,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Starting Flask app...'
-                // Run Flask app in background
+                // Run Flask app in background on Windows
                 bat 'start /B python app.py'
             }
         }
@@ -33,3 +33,6 @@ pipeline {
         }
         failure {
             echo '❌ Build Failed. Check logs.'
+        }
+    }
+}
