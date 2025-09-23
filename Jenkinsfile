@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -26,22 +27,22 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Starting Flask app...'
-        bat '''
-        taskkill /F /IM python.exe || echo No process to kill
-        start /B cmd /c "python app.py > flask.log 2>&1"
-        exit 0
-        '''
+
+                // Kill any previous Flask instances
+                bat 'taskkill /F /IM python.exe || echo No process to kill'
+
+                // Run Flask in background and redirect logs
+                bat 'start /B python app.py > flask.log 2>&1'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Build and Deploy Successful! Visit http://localhost:5000"
+            echo '✅ Build and Deploy Successful! Visit http://127.0.0.1:5000 or http://192.168.43.223:5000'
         }
         failure {
-            echo "❌ Build Failed. Check logs."
+            echo '❌ Build Failed. Check logs.'
         }
     }
 }
-
