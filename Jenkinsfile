@@ -28,7 +28,8 @@ pipeline {
                 echo 'Starting Flask app...'
         bat '''
         taskkill /F /IM python.exe || echo No process to kill
-        start cmd /c "python app.py > flask.log 2>&1"
+        start /B cmd /c "python app.py > flask.log 2>&1"
+        exit 0
         '''
             }
         }
