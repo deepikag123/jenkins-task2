@@ -21,9 +21,15 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying application...'
-                bat 'python app.py'
+                echo 'Starting Flask app...'
+                // Run Flask app in background
+                bat 'start /B python app.py'
             }
         }
     }
-}
+    post {
+        success {
+            echo '✅ Build and Deploy Successful! Visit http://localhost:5000'
+        }
+        failure {
+            echo '❌ Build Failed. Check logs.'
