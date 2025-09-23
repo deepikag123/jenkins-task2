@@ -10,14 +10,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'echo "All tests passed!"'
+                bat 'echo "All tests passed!"'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying application...'
                 // This will run Flask app in background
-                sh 'python app.py &'
+                bat 'python app.py &'
             }
         }
     }
